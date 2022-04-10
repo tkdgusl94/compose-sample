@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -40,6 +41,10 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
@@ -48,36 +53,99 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val (text, setValue) = remember {
-                mutableStateOf("")
-            }
+            val navController = rememberNavController()
 
-            val scaffoldState = rememberScaffoldState()
-            val scope = rememberCoroutineScope()
-            val keyboardController = LocalSoftwareKeyboardController.current
-
-            Scaffold(
-                scaffoldState = scaffoldState,
+            NavHost(
+                navController = navController,
+                startDestination = "first"
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    TextField(
-                        value = text,
-                        onValueChange = setValue
+                composable("first") {
+                    FirstScreen(navController)
+                }
+
+                composable("second") {
+                    SecondScreen(navController)
+                }
+
+                composable("third/{value}") { backStackEntry ->
+                    ThirdScreen(
+                        navController = navController,
+                        value = backStackEntry.arguments?.getString("value") ?: ""
                     )
-                    Button(onClick = {
-                        keyboardController?.hide()
-                        scope.launch {
-                            scaffoldState.snackbarHostState.showSnackbar("Hello $text")
-                        }
-                    }) {
-                        Text(text = "클릭!!!")
-                    }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun FirstScreen(
+    navController: NavController
+) {
+    val (value, setValue) = remember {
+        mutableStateOf("")
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "첫 화면")
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = {
+            navController.navigate("second")
+        }) {
+            Text(text = "두 번째")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        TextField(value = value, onValueChange = setValue)
+        Button(onClick = {
+            if (value.isNotEmpty()) {
+                navController.navigate("third/$value")
+            }
+        }) {
+            Text(text = "세 번째")
+        }
+    }
+}
+
+@Composable
+fun SecondScreen(
+    navController: NavController
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "두번째 화면")
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = {
+            navController.navigateUp()
+        }) {
+            Text(text = "뒤로 가기")
+        }
+    }
+}
+
+@Composable
+fun ThirdScreen(
+    navController: NavController,
+    value: String
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "세번째 화면")
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = value)
+        Button(onClick = {
+            navController.navigateUp()
+        }) {
+            Text(text = "뒤로 가기")
         }
     }
 }
