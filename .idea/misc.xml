@@ -5,6 +5,10 @@
       <map>
         <entry key="../../../../../layout/compose-model-1649572490246.xml" value="0.4296028880866426" />
         <entry key="../../../../../layout/compose-model-1650077890217.xml" value="0.335" />
+        <entry key="../../../../../layout/compose-model-1650113606421.xml" value="0.335" />
+        <entry key="app/src/main/res/drawable/ic_baseline_pause_24.xml" value="0.169" />
+        <entry key="app/src/main/res/drawable/ic_baseline_play_arrow_24.xml" value="0.169" />
+        <entry key="app/src/main/res/drawable/ic_baseline_refresh_24.xml" value="0.169" />
         <entry key="app/src/main/res/drawable/ic_baseline_sentiment_dissatisfied_24.xml" value="0.169" />
         <entry key="app/src/main/res/drawable/ic_baseline_sentiment_satisfied_24.xml" value="0.169" />
         <entry key="app/src/main/res/drawable/ic_baseline_sentiment_very_dissatisfied_24.xml" value="0.169" />
